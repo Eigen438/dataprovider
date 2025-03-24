@@ -1,6 +1,6 @@
 // MIT License
 //
-// Copyright (c) 2024 Eigen
+// Copyright (c) 2025 Eigen
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -38,21 +38,21 @@ func AddRoute(data interface{}, p DataProvider) {
 }
 
 // Create data
-func Create(ctx context.Context, data KeyGenerator) error {
+func Create(ctx context.Context, data any) error {
 	return defaultInstance.Create(ctx, data)
 }
 
 // Write/Set data
-func Set(ctx context.Context, data KeyGenerator) error {
+func Set(ctx context.Context, data any) error {
 	return defaultInstance.Set(ctx, data)
 }
 
 // Read/Get data
-func Get(ctx context.Context, data KeyGenerator) error {
+func Get(ctx context.Context, data any) error {
 	return defaultInstance.Get(ctx, data)
 }
 
 // Delete data
-func Delete(ctx context.Context, data KeyGenerator) error {
+func Delete(ctx context.Context, data any) error {
 	return defaultInstance.Delete(ctx, data)
 }

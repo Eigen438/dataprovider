@@ -1,6 +1,6 @@
 // MIT License
 //
-// Copyright (c) 2024 Eigen
+// Copyright (c) 2025 Eigen
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -36,7 +36,7 @@ func (i *inner) AddRoute(data interface{}, p DataProvider) {
 	i.route[reflect.TypeOf(data).String()] = p
 }
 
-func (i *inner) Create(ctx context.Context, data KeyGenerator) error {
+func (i *inner) Create(ctx context.Context, data any) error {
 	if p, ok := i.route[reflect.TypeOf(data).String()]; ok {
 		return p.Create(ctx, data)
 	} else {
@@ -44,7 +44,7 @@ func (i *inner) Create(ctx context.Context, data KeyGenerator) error {
 	}
 }
 
-func (i *inner) Set(ctx context.Context, data KeyGenerator) error {
+func (i *inner) Set(ctx context.Context, data any) error {
 	if p, ok := i.route[reflect.TypeOf(data).String()]; ok {
 		return p.Set(ctx, data)
 	} else {
@@ -52,7 +52,7 @@ func (i *inner) Set(ctx context.Context, data KeyGenerator) error {
 	}
 }
 
-func (i *inner) Get(ctx context.Context, data KeyGenerator) error {
+func (i *inner) Get(ctx context.Context, data any) error {
 	if p, ok := i.route[reflect.TypeOf(data).String()]; ok {
 		return p.Get(ctx, data)
 	} else {
@@ -60,7 +60,7 @@ func (i *inner) Get(ctx context.Context, data KeyGenerator) error {
 	}
 }
 
-func (i *inner) Delete(ctx context.Context, data KeyGenerator) error {
+func (i *inner) Delete(ctx context.Context, data any) error {
 	if p, ok := i.route[reflect.TypeOf(data).String()]; ok {
 		return p.Delete(ctx, data)
 	} else {

@@ -1,6 +1,6 @@
 // MIT License
 //
-// Copyright (c) 2024 Eigen
+// Copyright (c) 2025 Eigen
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,17 +24,13 @@ package dataprovider
 
 import "context"
 
-type KeyGenerator interface {
-	GenerateKey(context.Context) string
-}
-
 type DataProvider interface {
 	// Create Pathable data
-	Create(context.Context, KeyGenerator) error
+	Create(context.Context, any) error
 	// Write/Set Pathable data
-	Set(context.Context, KeyGenerator) error
+	Set(context.Context, any) error
 	// Read/Get Pathable data
-	Get(context.Context, KeyGenerator) error
+	Get(context.Context, any) error
 	// Delete Pathable data
-	Delete(context.Context, KeyGenerator) error
+	Delete(context.Context, any) error
 }
