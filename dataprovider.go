@@ -28,15 +28,26 @@ import (
 )
 
 type inner struct {
-	route    map[string]DataProvider
-	fallback DataProvider
+	route             map[string]DataProvider
+	writeOpIntercept  map[string]func(context.Context, any)
+	deleteOpIntercept map[string]func(context.Context, any)
+	fallback          DataProvider
 }
 
 func (i *inner) AddRoute(data interface{}, p DataProvider) {
 	i.route[reflect.TypeOf(data).String()] = p
 }
 
+func (i *inner) AddWriteOpInterceptor(data interface{}, f func(context.Context, any)) {
+	i.writeOpIntercept[reflect.TypeOf(data).String()] = f
+}
+
+func (i *inner) AddDeleteOpInterceptor(data interface{}, f func(context.Context, any)) {
+	i.deleteOpIntercept[reflect.TypeOf(data).String()] = f
+}
+
 func (i *inner) Create(ctx context.Context, data any) error {
+	defer i.writeOpInterceptor(ctx, data)
 	if p, ok := i.route[reflect.TypeOf(data).String()]; ok {
 		return p.Create(ctx, data)
 	} else {
@@ -45,6 +56,7 @@ func (i *inner) Create(ctx context.Context, data any) error {
 }
 
 func (i *inner) Set(ctx context.Context, data any) error {
+	defer i.writeOpInterceptor(ctx, data)
 	if p, ok := i.route[reflect.TypeOf(data).String()]; ok {
 		return p.Set(ctx, data)
 	} else {
@@ -61,9 +73,22 @@ func (i *inner) Get(ctx context.Context, data any) error {
 }
 
 func (i *inner) Delete(ctx context.Context, data any) error {
+	defer i.deleteOpInterceptor(ctx, data)
 	if p, ok := i.route[reflect.TypeOf(data).String()]; ok {
 		return p.Delete(ctx, data)
 	} else {
 		return i.fallback.Delete(ctx, data)
+	}
+}
+
+func (i *inner) writeOpInterceptor(ctx context.Context, data any) {
+	if p, ok := i.writeOpIntercept[reflect.TypeOf(data).String()]; ok {
+		p(ctx, data)
+	}
+}
+
+func (i *inner) deleteOpInterceptor(ctx context.Context, data any) {
+	if p, ok := i.deleteOpIntercept[reflect.TypeOf(data).String()]; ok {
+		p(ctx, data)
 	}
 }

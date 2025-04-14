@@ -28,13 +28,23 @@ var defaultInstance *inner
 
 func Initialize(fallbackProvider DataProvider) {
 	defaultInstance = &inner{
-		route:    map[string]DataProvider{},
-		fallback: fallbackProvider,
+		route:             map[string]DataProvider{},
+		writeOpIntercept:  map[string]func(context.Context, any){},
+		deleteOpIntercept: map[string]func(context.Context, any){},
+		fallback:          fallbackProvider,
 	}
 }
 
 func AddRoute(data interface{}, p DataProvider) {
 	defaultInstance.AddRoute(data, p)
+}
+
+func AddWriteOpInterceptor(data interface{}, f func(context.Context, any)) {
+	defaultInstance.AddWriteOpInterceptor(data, f)
+}
+
+func AddDeleteOpInterceptor(data interface{}, f func(context.Context, any)) {
+	defaultInstance.AddDeleteOpInterceptor(data, f)
 }
 
 // Create data
